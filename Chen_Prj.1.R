@@ -22,6 +22,9 @@ species.n <- dat%>%
 species.n
 #number of punctures per species
 
+table(dat$species)
+#another way I found
+
 dat %>%
   count(species, specimen) %>%
   print() %>%

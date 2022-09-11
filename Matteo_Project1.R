@@ -21,7 +21,7 @@ dat %>%
   print() %>%
   count(species, name = "n.specimens")
 
-pdf("Matteo_species.quadrant.pdf")
+pdf("Matteo.species.quadrant.pdf")
 for(i in species){
   p <- dat %>%
     filter(species==i)%>%
@@ -29,4 +29,3 @@ for(i in species){
   print(p)
 }
 dev.off()
-

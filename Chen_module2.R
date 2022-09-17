@@ -46,13 +46,12 @@ pseed.sum.max <- pseed.sum.max %>%
 view(pseed.sum.max)
 #calculated standard errors and added them to a new column "amp.sum.se"
 
-pd <- position_dodge(0.1)
 pseed.sum.max %>% 
   group_by(fish, bl.s) %>% 
   ggplot(aes(x=bl.s, y=amp.sum.mean, colour=fish)) + 
-  geom_errorbar(aes(ymin=amp.sum.mean-amp.sum.se, ymax=amp.sum.mean+amp.sum.se), width=.1, position=pd) +
-  geom_point(position=pd) + geom_smooth(method="lm")
-#plotted mean amp.sum vs specific swimming speed and included error bars with position correction
+  geom_errorbar(aes(ymin=amp.sum.mean-amp.sum.se, ymax=amp.sum.mean+amp.sum.se), width=.1) +
+  geom_point() + geom_smooth(method="lm")
+#plotted mean amp.sum vs specific swimming speed and included error bars
 #also included linear regression line to better show trend/correlation
 
 
@@ -64,6 +63,6 @@ view(pseed.sum.max)
 
 pseed.sum.max %>% 
   group_by(fish, bl.s) %>% 
-  ggplot(aes(x=amp.sum.mean , y=met.rate,col=fish))+geom_point()+geom_smooth(method="lm")
+  ggplot(aes(x=amp.sum.mean , y=met.rate,col=fish))+ geom_point()+geom_smooth(method="lm")
 #plotted metabolic output of each fish vs mean max amp.sum using ggplot point graph
 #also included linear regression line to better show trend/correlation

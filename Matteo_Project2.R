@@ -48,19 +48,18 @@ pseed.sum.max <- pseed.sum.max%>%
 pseed.sum.max %>%
   ggplot(aes(x=bl.s, y=amp.sum.mean, col = fish)) + geom_point() + geom_errorbar(aes(ymin=amp.sum.mean-amp.sum.se, ymax=amp.sum.mean+amp.sum.se), width = 0.03, size = 0.3)+geom_smooth(method="lm")
 
-#Question 5
+#Question 4
 
 pseed.met.sum <- pseed.met.rate%>%
   group_by(fish,bl.s)%>%
-  summarize(met.mean=mean(met.rate),
-            met.se=standard_error(met.rate))
+  summarize(met.mean=mean(met.rate))
 
 pseed.sum.max <- pseed.sum.max%>%
-  left_join(pseed.met.sum)%>%
+  inner_join(pseed.met.sum, by=c("fish", "bl.s"))%>%
   group_by(fish,bl.s)
 
 
 #Question 6
-pseed.met.kin%>%
-  ggplot(aes(x=amp.sum.mean,y=met.mean,col=fish))+geom_point()+geom_errorbar(aes(ymin=met.mean-met.se,ymax= met.mean+met.se), width = 0.01, size = 0.3)+geom_smooth(method="lm")
+pseed.sum.max%>%
+  ggplot(aes(x=amp.sum.mean,y=met.mean,col=fish))+geom_point()+geom_smooth(method="lm")
 

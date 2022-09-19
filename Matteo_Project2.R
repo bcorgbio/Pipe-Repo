@@ -9,6 +9,14 @@ pseed.met.rate <- read_csv("pseed.met.rate.csv")
 
 #Question  1
 
+find.peaks <- function(x,y,mult=100){ 
+  f <- fget(features(x = x,y=y*mult))[2:3]%>% 
+    as_tibble()%>% 
+    filter(curvature<0)%>% 
+    mutate(peaks=round(crit.pts,0))
+  return(f$peaks) 
+}
+
 pseed2 <- pseed%>%
   left_join(speeds,by=c("speed"="vol"))%>%
   print()

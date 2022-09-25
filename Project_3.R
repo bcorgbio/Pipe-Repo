@@ -44,4 +44,6 @@ anole2%>%
 anole.allo <- nls(HTotal~a*SVL^b, start=list(b=1, a=1),data = anole2)
 
 #Q2: 2 linear models
-anole.lm <- lm(HTotal~SVL,anole2)
+anole.lm.PH <- lm(HTotal~SVL+PH,anole.log)
+
+anole.lm.PD <- lm(HTotal~SVL+ArbPD,anole.log)

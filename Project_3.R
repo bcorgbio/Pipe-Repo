@@ -18,3 +18,27 @@ anole2 <- anole%>%
 
 anole.log <- anole2%>%
   mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
+
+anole2%>%
+  ggplot(aes(SVL,HTotal))+geom_point()+geom_smooth(method="lm")
+
+anole.lm <- lm(HTotal~SVL,anole2)
+
+coef(anole.lm)
+
+anole2%>%
+  ggplot(aes(SVL,HTotal))+geom_point()+geom_abline(slope=coef(anole.lm)[2],intercept=coef(anole.lm)[1],col="blue")
+
+SVL2 <- seq(min(anole2$SVL),max(anole2$SVL),0.1)
+
+pred.lm <-tibble(
+  SVL=SVL2,
+  H.pred=predict(anole.lm,newdata = data.frame(SVL=SVL2))
+)
+
+anole2%>%
+  ggplot(aes(SVL,HTotal))+geom_point()+geom_point(data=pred.lm,aes(SVL,H.pred),col="blue")
+
+
+anole.allo <- nls(HTotal~a*SVL^b, start=list(b=1, a=1),data = anole2)
+

@@ -7,6 +7,7 @@ library(phytools)
 library(viridis)
 library(MuMIn)
 
+#1. Loading Data
 anole <- read_csv("anole.dat.csv")
 anole.eco <- read_csv("anole.eco.csv")
 

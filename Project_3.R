@@ -20,30 +20,48 @@ anole2 <- anole%>%
 anole.log <- anole2%>%
   mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
 
-anole2%>%
-  ggplot(aes(SVL,HTotal))+geom_point()+geom_smooth(method="lm")
-
-anole.lm <- lm(HTotal~SVL,anole2)
-
-coef(anole.lm)
-
-anole2%>%
-  ggplot(aes(SVL,HTotal))+geom_point()+geom_abline(slope=coef(anole.lm)[2],intercept=coef(anole.lm)[1],col="blue")
-
-SVL2 <- seq(min(anole2$SVL),max(anole2$SVL),0.1)
-
-pred.lm <-tibble(
-  SVL=SVL2,
-  H.pred=predict(anole.lm,newdata = data.frame(SVL=SVL2))
-)
-
-anole2%>%
-  ggplot(aes(SVL,HTotal))+geom_point()+geom_point(data=pred.lm,aes(SVL,H.pred),col="blue")
-
-
-anole.allo <- nls(HTotal~a*SVL^b, start=list(b=1, a=1),data = anole2)
 
 #Q2: 2 linear models
 anole.lm.PH <- lm(HTotal~SVL+PH,anole.log)
 
 anole.lm.PD <- lm(HTotal~SVL+ArbPD,anole.log)
+
+anole.log <- anole.log %>%
+  mutate(res.PH=residuals(anole.lm.PH),res.PD=residuals(anole.lm.PD))
+
+#Q3
+anole.log%>%
+  ggplot(aes(ArbPD,res.PD))+geom_point()
+
+anole.log%>%
+  ggplot(aes(PH,res.PH))+geom_point()
+
+
+#Q4
+anole.tree <- read.tree("anole.tre")
+plot(anole.tree,cex=0.4)
+
+#A PGLS model with the hindlimb-SVL relationship + perch height
+pgls.BM1 <- gls(HTotal~SVL+PH, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+#A PGLS model with the hindlimb-SVL relationship + perch diameter
+pgls.BM2 <- gls(HTotal~SVL+ArbPD, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+# A PGLS model with the hindlimb-SVL relationship + perch height + perch diameter
+pgls.BM3 <- gls(HTotal~SVL+ArbPD+PH, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+#Q5
+
+anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.BM3)
+aicw(anole.phylo.aic$AICc)
+anova(pgls.BM3)
+#add conclusion
+
+#Q6
+anole.log <- anole.log%>%
+  mutate(phylo.res=residuals(pgls.BM3))
+
+p.phylo.point <- anole.log%>%
+  ggplot(aes(x=ArbPD,y=phylo.res)) +geom_point() + geom_hline(aes(yintercept=mean(phylo.res)),color="blue")
+
+print(p.phylo.point)

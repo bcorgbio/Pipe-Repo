@@ -39,6 +39,20 @@ pseed.wide <- pseed2 %>%
   mutate(amp.sum=L+R)%>%
   print() 
 
+
+
+#CPK: This could be much more concise [-1] . . . 
+
+pseed2 <- pseed%>%
+  left_join(speeds,by=c("speed"="vol"))%>%
+  left_join(pseed.bl,by="fish")%>%
+  mutate(bl.s=cm.s/bl)%>%
+  group_by(date,frame) %>%
+  mutate(amp.sum=sum(amp.bl))%>%
+  pivot_wider(names_from = fin,values_from = amp.bl) %>%
+  mutate(amp.sum=L+R)%>%
+  print() 
+
 #Question 2/3
 
 standard_error <- function(x) sd(x) / sqrt(length(x))
@@ -49,6 +63,16 @@ pseed.sum.max <- pseed.wide%>%
   filter(peak==T)
 
 pseed.sum.max <- pseed.sum.max%>%
+  group_by(fish,bl.s)%>%
+  summarize(amp.sum.mean=mean(amp.sum),
+            amp.sum.se=standard_error(amp.sum))
+
+#CPK: Nice work using the se function with mean in one operation. Lot's of folks missed this. But again, this could be written more concisely. Oh, and we wanted to group by date (the experiment) at first to find cycles [-1] . . . 
+
+pseed.sum.max <- pseed.wide%>%
+  group_by(fish, bl.s,date)%>%
+  mutate(peak=frame %in% find.peaks(frame,amp.sum))%>%
+  filter(peak==T)%>%
   group_by(fish,bl.s)%>%
   summarize(amp.sum.mean=mean(amp.sum),
             amp.sum.se=standard_error(amp.sum))
@@ -71,3 +95,4 @@ pseed.sum.max <- pseed.sum.max%>%
 pseed.sum.max%>%
   ggplot(aes(x=amp.sum.mean,y=met.mean,col=fish))+geom_point()+geom_smooth(method="lm")
 
+#CPK: Very nice! Great work on the last few prompts especially. 

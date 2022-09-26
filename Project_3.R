@@ -31,10 +31,10 @@ anole.log <- anole.log %>%
 
 #Q3
 anole.log%>%
-  ggplot(aes(ArbPD,res.PD))+geom_point()
+  ggplot(aes(Ecomorph2,res.PD))+geom_boxplot()
 
 anole.log%>%
-  ggplot(aes(PH,res.PH))+geom_point()
+  ggplot(aes(Ecomorph2,res.PH))+geom_boxplot()
 
 
 #Q4

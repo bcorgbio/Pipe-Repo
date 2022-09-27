@@ -61,7 +61,6 @@ anova(pgls.BM3)
 anole.log <- anole.log%>%
   mutate(phylo.res=residuals(pgls.BM3))
 
-p.phylo.point <- anole.log%>%
-  ggplot(aes(x=ArbPD,y=phylo.res)) +geom_point() + geom_hline(aes(yintercept=mean(phylo.res)),color="blue")
+anole.log%>%
+  ggplot(aes(Ecomorph2,phylo.res))+geom_boxplot()
 
-print(p.phylo.point)

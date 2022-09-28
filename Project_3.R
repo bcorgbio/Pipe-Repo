@@ -23,10 +23,10 @@ anole.lm.PH <- lm(HTotal~SVL+PH,anole.log)
 
 anole.lm.PD <- lm(HTotal~SVL+ArbPD,anole.log)
 
+#Q3
 anole.log <- anole.log %>%
   mutate(res.PH=residuals(anole.lm.PH),res.PD=residuals(anole.lm.PD))
 
-#Q3
 anole.log%>%
   dplyr::select(Ecomorph2,res.PD,res.PH)%>%
   pivot_longer(cols=c("res.PD","res.PH"))%>%
@@ -34,7 +34,6 @@ anole.log%>%
 
 #Q4
 anole.tree <- read.tree("anole.tre")
-plot(anole.tree,cex=0.4)
 
 #A PGLS model with the hindlimb-SVL relationship + perch height
 pgls.BM1 <- gls(HTotal~SVL+PH, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")

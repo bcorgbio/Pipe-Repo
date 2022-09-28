@@ -1,4 +1,4 @@
-library(tidyverse) # Rember to load your libraries!
+library(tidyverse) # Remember to load your libraries!
 library(ape)
 library(nlme)
 library(geiger)
@@ -35,7 +35,6 @@ anole.log%>%
 
 anole.log%>%
   ggplot(aes(Ecomorph2,res.PH))+geom_boxplot()
-
 
 #Q4
 anole.tree <- read.tree("anole.tre")

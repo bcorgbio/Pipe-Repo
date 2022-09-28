@@ -50,7 +50,8 @@ pgls.BM3 <- gls(HTotal~SVL+ArbPD+PH, correlation = corBrownian(1,phy = anole.tre
 anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.BM3)
 aicw(anole.phylo.aic$AICc)
 anova(pgls.BM3)
-#Perch diameter is the significant predictor of hind-limb length, as it  not only produced a larger F-value, but also produced a P-vlaue 2 orders of magnitude smaller than perch height
+#Perch diameter is the better predictor of hind-limb length, producing a P-value (0.0005) 2 orders of magnitude smaller than perch height. This is indicative of a strong correlation with hind-limb length.
+
 
 #Q6
 anole.log <- anole.log%>%

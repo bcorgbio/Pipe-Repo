@@ -31,10 +31,9 @@ anole.log <- anole.log %>%
 
 #Q3
 anole.log%>%
-  ggplot(aes(Ecomorph2,res.PD))+geom_boxplot()
-
-anole.log%>%
-  ggplot(aes(Ecomorph2,res.PH))+geom_boxplot()
+  dplyr::select(Ecomorph2,res.PD,res.PH)%>%
+  pivot_longer(cols=c("res.PD","res.PH"))%>%
+  ggplot(aes(x=Ecomorph2,y=value))+geom_boxplot()+facet_grid(name~.,scales = "free_y")+ylab("residual")
 
 #Q4
 anole.tree <- read.tree("anole.tre")

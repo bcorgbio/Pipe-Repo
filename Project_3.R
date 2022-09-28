@@ -11,13 +11,10 @@ library(MuMIn)
 anole <- read_csv("anole.dat.csv")
 anole.eco <- read_csv("anole.eco.csv")
 
-anole2 <- anole%>%
+anole.log <- anole%>%
   left_join(anole.eco)%>%
   filter(!Ecomorph%in%c("U","CH"))%>%
   na.omit()%>%
-  print()
-
-anole.log <- anole2%>%
   mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
 
 

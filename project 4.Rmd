@@ -13,6 +13,21 @@ library(MuMIn) #for AIC
 library(geiger) #for eco analysis
 library(knitr) #for knitting options
 ```
+
+
+# Introduction
+A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos [@hagey2017there]. Based on this work, we look to test how additional habitat covariates like perch height and perch diameter affect the relationship between snout-vent length and hind limb length across different ecomorphs of *Anolis*. By finding covariates that are significant predictors, we can formulate models that can better explain the allometric scaling of snout-vent length and hind limb length based on ecomorphs.
+
+<center>
+![An anolis lizard](https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Ami_Lily_close.jpg/311px-Ami_Lily_close.jpg)
+</center>
+
+
+# Methods
+
+We examined the ecological parameters the lizard compared to the hindlimb-SVL relationship by first creating a linear model, and then creating a phylogenetic least squares model using a PGLS model [@felsenstein1985phylogenies]. We chose the linear model because it it allowed us to consider the significance of the ecomorph on the hindlimb-SVL relationship, and the phylogenetic least squares model allowed us to determine if any seen patterns occurred as a result of ecomorp or phylogeny.
+
+# Results
 ```{r,include=FALSE}
 anole <- read_csv("anole.dat.csv")
 anole.eco <- read_csv("anole.eco.csv")
@@ -47,8 +62,9 @@ pgls.OU2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.
 anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
 anole.phylow.aicw <- aicw(anole.phylo.aic$AICc)
 anole.phylo.aic %>%
-  kable()
+  kable(caption="Based on the AIC scores of the four models, ")
 ```
+
 ```{r, include=FALSE}
 #add phylo-corrected residuals
 anole.log <- anole.log%>%
@@ -61,21 +77,6 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 
 print(p.eco.phylo)
 ```
-
-# Introduction
-A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos [@hagey2017there]. Based on this work, we look to test how additional habitat covariates like perch height and perch diameter affect the relationship between snout-vent length and hind limb length across different ecomorphs of *Anolis*. By finding covariates that are significant predictors, we can formulate models that can better explain the allometric scaling of snout-vent length and hind limb length based on ecomorphs.
-
-<center>
-![An anolis lizard](https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Ami_Lily_close.jpg/311px-Ami_Lily_close.jpg)
-</center>
-
-
-# Methods
-
-We examined the ecological parameters the lizard compared to the hindlimb-SVL relationship by first creating a linear model, and then creating a phylogenetic least squares model using a PGLS model [@felsenstein1985phylogenies]. We chose the linear model because it it allowed us to consider the significance of the ecomorph on the hindlimb-SVL relationship, and the phylogenetic least squares model allowed us to determine if any seen patterns occurred as a result of ecomorp or phylogeny.
-
-# Results
-
 # Discussion
 
 An analysis of the two covariates indicated that perch diameter produces a reliable model for predicting hind limb length for an ecomorph of anoles. This finding suggests that there is a strong correlation between perch diameter and hind-limb length.

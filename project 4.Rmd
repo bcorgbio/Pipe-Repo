@@ -87,10 +87,11 @@ print(p.eco.phylo)
 
 # Discussion
 
-An analysis of the two covariates indicated that perch diameter produces a reliable model for predicting hind limb length for an ecomorph of anoles. This finding suggests that there is a strong correlation between perch diameter and hind-limb length.
+An analysis of the two covariates indicated that perch diameter produces a reliable model for predicting hind limb length for an ecomorph of anoles. This finding suggests that there is a strong correlation between perch diameter and hind-limb length. Additionally, perch diameter is the better predictor of hind-limb length, producing a P-value (0.0005) 2 orders of magnitude smaller than perch height. This is indicative of a strong correlation with hind-limb length.
 
 
 # Author Contributions
+Karim established anole.log data tibble and constructed two simple linear models. Philip plotted the residuals against perch diameter and height. Steve made the BM model of trait evolution. Matteo assessed the fit of each of the models using AICc and AICw, and droduced a plot that concisely visualizes the effect of the covariate(s) and factors. Everyone equally contributed to the report.
 
 # References
 

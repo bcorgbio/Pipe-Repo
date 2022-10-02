@@ -70,13 +70,21 @@ anole.phylo.aic %>%
 anole.log <- anole.log%>%
   mutate(phylo.res=residuals(pgls.BM2))
 ```
-```{r,include=FALSE}
+
+```{r, echo=FALSE, message = FALSE}
+anole.log%>%
+  ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
+```
+
+```{r,echo= FALSE}
 #plot residuals
 p.eco.phylo <- anole.log%>%
 ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geom="point", size=3)
 
 print(p.eco.phylo)
 ```
+
+
 # Discussion
 
 An analysis of the two covariates indicated that perch diameter produces a reliable model for predicting hind limb length for an ecomorph of anoles. This finding suggests that there is a strong correlation between perch diameter and hind-limb length.

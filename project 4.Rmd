@@ -27,11 +27,13 @@ A study from 2017 discussed and compared the effect of ecomorph on hind limb len
 
 We examined the ecological parameters the lizard compared to the hindlimb-SVL relationship by first creating a linear model, and then creating a phylogenetic least squares model using a PGLS model [@felsenstein1985phylogenies]. We chose the linear model because it it allowed us to consider the significance of the ecomorph on the hindlimb-SVL relationship, and the phylogenetic least squares model allowed us to determine if any seen patterns occurred as a result of ecomorp or phylogeny.
 
+### Loading the Data
 ```{r, "load the data"}
 anole <- read_csv("anole.dat.csv")
 anole.eco <- read_csv("anole.eco.csv")
 anole.tree <- read.tree("anole.tre")
 ```
+### Merging the Anole Data Sets
 ```{r, "join, filter, mutate to log"}
 anole2 <- anole%>%
 left_join(anole.eco)%>%
@@ -42,6 +44,7 @@ anole.log <- anole2%>%
   mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
 ```
 
+### Running PGLS Models
 ```{r, "PGLS models"}
 ### phylogenetic GLS models
 
@@ -57,11 +60,13 @@ pgls.OU1 <- gls(HTotal ~SVL, correlation = corMartins(0,phy = anole.tree,form=~S
 #PGLS under OU, w, ecomorph
 pgls.OU2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
 ```
+### Determining AIC Scores for Models
 ```{r, "AIC"}
 #AIC operations
 anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
 anole.phylow.aicw <- aicw(anole.phylo.aic$AICc)
 ```
+### Creating Residuals for BM2 Model
 ```{r, "add residuals"}
 #add phylo-corrected residuals
 anole.log <- anole.log%>%
@@ -70,20 +75,21 @@ anole.log <- anole.log%>%
 
 # Results
 
+### A comparative table showing the AIC scores of the differing models
 ```{r, echo=FALSE}
 anole.phylo.aic %>%
-  kable(caption="Based on the AIC scores of the four models, ")
+  kable(caption="")
 ```
-A comparative table showing the AIC scores of the differing models
 
+### Hindlimb-SVL relationships based on ecomorph
 ```{r, echo=FALSE, message = FALSE}
 anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
 
-Hindlimb-SVL relationships based on ecomorph
 
 
+### Plot of the residuals of model BM2 against each ecomorph
 ```{r,echo=FALSE}
 #plot residuals
 p.eco.phylo <- anole.log%>%
@@ -92,7 +98,7 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 print(p.eco.phylo)
 ```
 
-Plot of the residuals of model BM2 against each ecomorph
+
 
 # Discussion
 

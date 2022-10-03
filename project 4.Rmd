@@ -16,7 +16,7 @@ library(knitr) #for knitting options
 
 
 # Introduction
-A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos [@hagey2017there]. Based on this work, we look to test how additional habitat covariates like perch height and perch diameter affect the relationship between snout-vent length and hind limb length across different ecomorphs of *Anolis*. By finding covariates that are significant predictors, we can formulate models that can better explain the allometric scaling of snout-vent length and hind limb length based on ecomorphs.
+A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos [@hagey2017there]. Based on this work, we want to analyze the relationship between hind limb length and snout-vent length across different ecomorphs of *Anolis*. By testing for the significance of predictors and correcting for phylogenetic relationships, we can determine whether snout-vent length and ecomorph explain variations in hind limb length and subsequently formulate models that visualize those effects.
 
 <center>
 ![An anolis lizard](https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Ami_Lily_close.jpg/311px-Ami_Lily_close.jpg)
@@ -69,15 +69,20 @@ anole.log <- anole.log%>%
 ```
 
 # Results
+
 ```{r, echo=FALSE}
 anole.phylo.aic %>%
   kable(caption="Based on the AIC scores of the four models, ")
 ```
+A comparative table showing the AIC scores of the differing models
 
 ```{r, echo=FALSE, message = FALSE}
 anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
+
+Hindlimb-SVL relationships based on ecomorph
+
 
 ```{r,echo=FALSE}
 #plot residuals
@@ -87,6 +92,7 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 print(p.eco.phylo)
 ```
 
+Plot of the residuals of model BM2 against each ecomorph
 
 # Discussion
 

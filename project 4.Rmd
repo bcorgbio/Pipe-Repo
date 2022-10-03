@@ -16,7 +16,8 @@ library(knitr) #for knitting options
 
 
 # Introduction
-A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos [@hagey2017there]. Based on this work, we want to analyze the relationship between hind limb length and snout-vent length across different ecomorphs of *Anolis*. By testing for the significance of predictors and correcting for phylogenetic relationships, we can determine whether snout-vent length and ecomorph explain variations in hind limb length and subsequently formulate models that visualize those effects.
+ A study from 2017 discussed and compared the effect of ecomorph on hind limb length in anoles and geckos[@hagey2017there]. Based on this work, we want to analyze the relationship between hind limb length and snout-vent length across different ecomorphs of *Anolis*. By testing for the significance of predictors and correcting for phylogenetic relationships, we can determine whether snout-vent length and ecomorph explain variations in hind limb length and subsequently formulate models that visualize those effects.
+
 
 <center>
 ![An anolis lizard](https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Ami_Lily_close.jpg/311px-Ami_Lily_close.jpg)
@@ -78,8 +79,11 @@ anole.log <- anole.log%>%
 ### A comparative table showing the AIC scores of the differing models
 ```{r, echo=FALSE}
 anole.phylo.aic %>%
-  kable(caption="")
+  kable()
 ```
+
+A table displaying the AIC scores of the four models we formulated around the relationship between hind limb length and snout-vent length based on phylogenetic relationships. pgls.BM1 is a PGLS model constructed under Brownian motion with no interaction between ecomorph and the slope coefficient between hind limb length and snout-vent length, and the constant. Pgls.BM2 is that same model but with the inclusion of those interactions. Pgls.OU1 is an OU model with the alpha value set to 0, or no selection, without the inclusion of the ecomorph interactions. Pgls.OU2 is the same OU model with the ecomorph interactions.
+
 
 ### Hindlimb-SVL relationships based on ecomorph
 ```{r, echo=FALSE, message = FALSE}
@@ -87,6 +91,7 @@ anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
 
+A graph of log-transformed data was used to visualize the effect of ecomorphs on the hindlimb-SVL relationship. The graph demonstrates the relationship hindlimb-SVL relationship by plotting their linear regressions differentiated by their respective ecomorphs shown in differing colors.
 
 
 ### Plot of the residuals of model BM2 against each ecomorph
@@ -98,12 +103,12 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 print(p.eco.phylo)
 ```
 
+Box plot showing residuals calculated based on the best fitting model, pgls.BM2, across ecomorphs. Box plot features the differences in range and mean of phylogenetically corrected residuals.
 
 
 # Discussion
 
-An analysis of the two covariates indicated that perch diameter produces a reliable model for predicting hind limb length for an ecomorph of anoles. This finding suggests that there is a strong correlation between perch diameter and hind-limb length. Additionally, perch diameter is the better predictor of hind-limb length, producing a P-value (0.0005) 2 orders of magnitude smaller than perch height. This is indicative of a strong correlation with hind-limb length.
-
+Based on AIC scores, we found that a PGLS featuring Brownian motion, or genetic drift, and the inclusion of ecomorph to be the model that best explains the variations in hind limb length and snout-vent length. Even after accounting for phylogenetic relationships, there are differences in the allometric relationship between hind limb length and snout-vent length across ecomorphs of *Anolis*. Our results show that the morphological differences between ecomorphs can be assessed by multiple methods.
 
 # Author Contributions
 Karim established anole.log data tibble and constructed two simple linear models. Philip plotted the residuals against perch diameter and height. Steve made the BM model of trait evolution. Matteo assessed the fit of each of the models using AICc and AICw, and droduced a plot that concisely visualizes the effect of the covariate(s) and factors. Everyone equally contributed to the report.

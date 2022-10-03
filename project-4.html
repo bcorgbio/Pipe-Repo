@@ -420,6 +420,51 @@ because it it allowed us to consider the significance of the ecomorph on
 the hindlimb-SVL relationship, and the phylogenetic least squares model
 allowed us to determine if any seen patterns occurred as a result of
 ecomorp or phylogeny.</p>
+<pre class="r"><code>anole &lt;- read_csv(&quot;anole.dat.csv&quot;)</code></pre>
+<pre><code>## Rows: 70 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Species
+## dbl (2): SVL, HTotal
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>anole.eco &lt;- read_csv(&quot;anole.eco.csv&quot;)</code></pre>
+<pre><code>## Rows: 70 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (3): Species, Ecomorph, Ecomorph2
+## dbl (2): PH, ArbPD
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>anole.tree &lt;- read.tree(&quot;anole.tre&quot;)</code></pre>
+<pre class="r"><code>anole2 &lt;- anole%&gt;%
+left_join(anole.eco)%&gt;%
+  filter(!Ecomorph%in%c(&quot;U&quot;,&quot;CH&quot;))%&gt;%
+  na.omit()</code></pre>
+<pre><code>## Joining, by = &quot;Species&quot;</code></pre>
+<pre class="r"><code>anole.log &lt;- anole2%&gt;%
+  mutate_at(c(&quot;SVL&quot;, &quot;HTotal&quot;,&quot;PH&quot;,&quot;ArbPD&quot;),log)</code></pre>
+<pre class="r"><code>### phylogenetic GLS models
+
+#PGLS under BM, no ecomorph
+pgls.BM1 &lt;- gls(HTotal ~SVL, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = &quot;ML&quot;)
+
+#PGLS under BM, w ecomorph
+pgls.BM2 &lt;- gls(HTotal ~SVL * Ecomorph2, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = &quot;ML&quot;)
+
+#PGLS under OU, no ecomorph
+pgls.OU1 &lt;- gls(HTotal ~SVL, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = &quot;ML&quot;)
+
+#PGLS under OU, w, ecomorph
+pgls.OU2 &lt;- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = &quot;ML&quot;)</code></pre>
+<pre class="r"><code>#AIC operations
+anole.phylo.aic &lt;- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
+anole.phylow.aicw &lt;- aicw(anole.phylo.aic$AICc)</code></pre>
+<pre class="r"><code>#add phylo-corrected residuals
+anole.log &lt;- anole.log%&gt;%
+  mutate(phylo.res=residuals(pgls.BM2))</code></pre>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
